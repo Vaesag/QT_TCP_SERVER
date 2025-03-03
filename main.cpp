@@ -6,6 +6,7 @@
 #include <QDebug>             // Для вывода сообщений отладки.
 #include <utility>
 
+
 class MyTcpServer : public QTcpServer {
     Q_OBJECT
 public:
@@ -24,13 +25,13 @@ protected:
         connect(socket, &QTcpSocket::disconnected, this, [this, socket]() {
             clients.removeAll(socket);
             socket->deleteLater();
-            qDebug() << "Клиент отключился. Количество клиентов:" << clients.size();
+            qDebug() << "The client disconnected. Number of clients:" << clients.size();
             sendClientCount();  // Отправляем обновлённое количество всем клиентам.
         });
 
         // Добавляем нового клиента и рассылаем обновлённое количество.
         clients.append(socket);
-        qDebug() << "Новый клиент подключился. Количество клиентов:" << clients.size();
+        qDebug() << "A new client has connected. Number of clients:" << clients.size();
         sendClientCount(); // Отправляем обновлённое количество всем клиентам.
     }
 
@@ -51,14 +52,15 @@ private:
 };
 
 int main(int argc, char *argv[]){
+
     QCoreApplication a(argc, argv);
 
     MyTcpServer server;
     if (!server.listen(QHostAddress::Any, 1234)) {
-        qCritical() << "Сервер не смог запуститься!";
+        qCritical() << "The server could not start!";
         return 1;
     }
-    qDebug() << "Сервер запущен на порту 1234.";
+    qDebug() << "The server is running on port 1234.";
 
     return a.exec();
 }
